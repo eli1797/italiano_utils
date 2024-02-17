@@ -1,0 +1,7 @@
+venv/
+package
+__pycache__
+package.zip
+.DS_Store
+*.pyc
+.ssh
