@@ -54,7 +54,21 @@ def get_for_tense_person(tense: str, person: str, conjugations: dict) -> dict:
 
 
 def cardset_to_basic_card_format(infinitive: str, conjugations: dict, df: str, cardset: dict) -> list[dict]:
-    cards = []
+    cards = [
+        {
+            "deckName": "Italiano",
+            "modelName": "Basic",
+            "fields": {
+                "Front": df, 
+                "Back": infinitive,
+            },
+            "tags": [
+                "italiano_utils",
+                "itutils:v0.0",
+                infinitive,
+            ]
+        }
+    ]
 
     for tense, persons in cardset.items():
         for person in persons:
@@ -73,6 +87,8 @@ def cardset_to_basic_card_format(infinitive: str, conjugations: dict, df: str, c
                 ]
             }
             cards.append(card)
+
+        
     return cards
 
 
