@@ -5,9 +5,6 @@ from rich.console import Console
 from scrape_conjugation import get_conjugations, minimal_tenses
 from anki_ops import add_notes, list_existing_tags
 
-# TODO: remove
-temp = {'Indicativo Presente': [' io volo', ' tu voli', ' lei/lui vola', ' noi voliamo', ' voi volate', ' loro volano'], 'Indicativo Imperfetto': [' io volavo', ' tu volavi', ' lei/lui volava', ' noi volavamo', ' voi volavate', ' loro volavano'], 'Indicativo Futuro semplice': [' io volerò', ' tu volerai', ' lei/lui volerà', ' noi voleremo', ' voi volerete', ' loro voleranno'], 'Indicativo Passato prossimo': [' io ho volato', ' tu hai volato', ' lei/lui ha volato', ' noi abbiamo volato', ' voi avete volato', ' loro hanno volato', '', ' io sono volato', ' tu sei volato', ' lui è volato', ' lei è volata', ' noi siamo volati', ' voi siete volati', ' loro sono volati', ' loro sono volate']}
-
 cardsets = {
     0: {
         'Indicativo Presente': ['io'],
@@ -25,6 +22,13 @@ cardsets = {
         'Indicativo Futuro semplice': ['io'],
         'Indicativo Passato prossimo': ['io', 'noi']
     }
+}
+
+scraped_anki_tenses = {
+    "Indicativo Presente": "presente",
+    "Indicativo Imperfetto": "imperfetto",
+    "Indicativo Passato prossimo": "passato_prossimo",
+    "Indicativo Futuro semplice": "futuro",
 }
 
 it_en_people = {
@@ -65,6 +69,7 @@ def cardset_to_basic_card_format(infinitive: str, conjugations: dict, df: str, c
             "tags": [
                 "italiano_utils",
                 "itutils:v0.0",
+                "infinito",
                 infinitive,
             ]
         }
@@ -84,6 +89,7 @@ def cardset_to_basic_card_format(infinitive: str, conjugations: dict, df: str, c
                     "italiano_utils",
                     "itutils:v0.0",
                     infinitive,
+                    scraped_anki_tenses.get(tense, "")
                 ]
             }
             cards.append(card)
@@ -115,11 +121,8 @@ def print_cardset_data(vc: dict):
 
 
 def iteractive():
-    # infinitive = "volare"
-    # vc = temp
-    # df = "to fly"
-
     infinitive = click.prompt("What's the verb infinitivo?", type=str)
+    infinitive = infinitive.lower()
     vc, df = get_conjugations(infinitive, minimal_tenses, withDef=True)
 
     print_cardset_data(vc)    
@@ -141,12 +144,6 @@ def iteractive():
     
     ids = add_notes(cardlist)
     print(ids)
-                                        
-
-
-
-
-
 
 
 if __name__ == "__main__":
