@@ -49,7 +49,7 @@ def get_for_tense_person(tense: str, person: str, conjugations: dict) -> dict:
     peeps = conjugations[tense]
     for peep in peeps:
         # determine if there's essere and avere
-        if tense == "Indicativo Passato prossimo" and person in peep:
+        if tense == "Indicativo Passato prossimo" and (person + " ") in peep:  # the space is to avoid matching "io" with "giocare" etc.
             occurrences.append(peep)
         elif person in peep:
             return peep
