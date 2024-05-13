@@ -25,6 +25,7 @@ def list_models() -> list[str]:
         out.append(name)
     return out
 
+
 def get_model_fields(model_name: str) -> list[str]:
     payload = {"action": "modelFieldNames", "version": 6, "params": {"modelName": model_name}}
     result = _make_request(payload)
@@ -35,7 +36,7 @@ def get_model_fields(model_name: str) -> list[str]:
     return out
 
 
-def validate_model(model_name: str) -> Exception | None:
+def validate_model(model_name: str):
     models = list_models()
     if not model_name in models:
         return Exception(f"Model {model_name} not found")
