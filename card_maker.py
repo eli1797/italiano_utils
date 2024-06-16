@@ -11,7 +11,7 @@ cardsets = {
         'Indicativo Passato prossimo': ['io']
     },
     1: {
-        'Indicativo Presente': ['io', 'tu'],
+        'Indicativo Presente': ['io', 'tu', 'lei/lui'],
         'Indicativo Imperfetto': ['io'],
         'Indicativo Futuro semplice': ['io'],
         'Indicativo Passato prossimo': ['io']
@@ -126,8 +126,14 @@ def iteractive():
     vc, df = get_conjugations(infinitive, minimal_tenses, withDef=True)
 
     print_cardset_data(vc)    
+    print(f"{infinitive}: {df}")
+    print()
 
     cardset_num = click.prompt("Which cardset would you like to use?", type=int)
+    
+    updated_def = click.prompt("Would you like to change the definition? If so, type it here", default=df, type=str)
+    if updated_def:
+        df = updated_def
 
     cardlist = cardset_to_basic_card_format(infinitive, vc, df, cardsets[cardset_num])
 
