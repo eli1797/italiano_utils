@@ -141,12 +141,12 @@ def iteractive():
     for card in cardlist:
         tags.update(card["tags"])
 
-    already_exists = list_existing_tags(list(tags))
-    continue_anyway = click.confirm(f"Tags {already_exists} already exist. Continue anyway?")
-
-    if not continue_anyway:
-        print("Exiting")
-        return 
+    existing_tags = list_existing_tags(list(tags))
+    if infinitive in existing_tags:
+        continue_anyway = click.confirm(f"Tag {infinitive} already exist. Continue anyway?")
+        if not continue_anyway:
+            print("Exiting")
+            return 
     
     ids = add_notes(cardlist)
     print(ids)
