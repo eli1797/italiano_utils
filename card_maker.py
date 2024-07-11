@@ -5,6 +5,12 @@ from rich.console import Console
 from scrape_conjugation import get_conjugations, minimal_tenses
 from anki_ops import add_notes, list_existing_tags
 
+
+"""
+TODO:
+- maybe: add the gerund, at least as an option to include it
+"""
+
 cardsets = {
     0: {
         'Indicativo Presente': ['io'],
