@@ -1,3 +1,4 @@
+import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
@@ -48,7 +49,7 @@ def get_definitions(verb: str, driver=None) -> str:
 def get_conjugations(verb: str, tenses: list[str], withDef=False) -> dict:
     """build a dict of conjugations for the minimal tenses"""
     driver = _setup_driver(verb)
-    
+
     out = {}
     for tense in tenses:
         out[tense] = []
@@ -79,12 +80,27 @@ def get_conjugations(verb: str, tenses: list[str], withDef=False) -> dict:
     return (out, definitions)
 
 
+def handle_gdpr_popup(driver):
+    try:
+        # Wait for the "Agree and close" button to be clickable
+        agree_button = WebDriverWait(driver, 3).until(
+            EC.element_to_be_clickable((By.ID, "didomi-notice-agree-button"))
+        )
+        # Click the button
+        agree_button.click()
+        print("GDPR popup handled successfully")
+    except Exception as e:
+        print(f"Failed to handle GDPR popup: {e}")
+
+
 def _setup_driver(verb: str) -> webdriver.Firefox:
     options = Options()
     options.page_load_strategy = 'eager'
     options.headless = True
     driver = webdriver.Firefox(options=options)
     driver.get(f"https://conjugator.reverso.net/conjugation-italian-verb-{verb}.html")
+
+    handle_gdpr_popup(driver=driver)
     return driver
 
 
