@@ -104,7 +104,7 @@ def cardset_to_basic_card_format(infinitive: str, conjugations: dict, df: str, c
     return cards
 
 
-def print_cardset_data(vc: dict):
+def print_cardset_data(infinitive: str, vc: dict, df: str, gr: str):
     print()
     for tense, persons in cardsets[2].items():
         table = Table(title=tense)
@@ -123,16 +123,19 @@ def print_cardset_data(vc: dict):
 
         console = Console()
         console.print(table)
+    
+    print(f"Gerundio: {gr}")
+    print()
+    print(f"{infinitive}: {df}")
     print()
 
 
 def iteractive():
     infinitive = click.prompt("What's the verb infinitivo?", type=str)
     infinitive = infinitive.lower()
-    vc, df = get_conjugations(infinitive, minimal_tenses, withDef=True)
+    vc, df, gr = get_conjugations(infinitive, minimal_tenses, withDef=True, withGr=True)
 
-    print_cardset_data(vc)    
-    print(f"{infinitive}: {df}")
+    print_cardset_data(infinitive, vc, df, gr)    
     print()
 
     cardset_num = click.prompt("Which cardset would you like to use?", type=int)

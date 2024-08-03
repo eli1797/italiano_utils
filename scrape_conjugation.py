@@ -15,40 +15,55 @@ minimal_tenses = [
 ]
 
 
-def _get_tense_options(verb: str) -> list[str]:
-    """
-    Find all elements with a 'mobile-title' attribute
-    Can be used for populating tenses to fetch conjugations for
-    """
-    driver = _setup_driver(verb)
-    elements_with_mobile_title = driver.find_elements(By.XPATH, "//*[@mobile-title]")
-    
-    out = []
-    for element in elements_with_mobile_title:
-        out.append(element.get_attribute("mobile-title"))
-    
-    driver.quit()
-    return out
-
-
 def get_definitions(verb: str, driver=None) -> str:
     if driver is None:
-        driver = _setup_driver(verb)
+        driver = setup_driver(verb)
+    try:
+        translation = WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.XPATH, "//p[@class='context-term']"))
+        )
+        out = translation.text
+    except Exception as e:
+        print(f"Error getting definitions: {e}")
+        out = ""
+    finally:
+        if driver is None:
+            driver.quit()
 
-    translation_element = driver.find_element(By.ID, "list-translations")
-    translation = translation_element.find_element(By.XPATH, value="//p[@class='context-term']")
-    translation = WebDriverWait(driver, 10).until(
-       EC.visibility_of_element_located((By.XPATH, "//p[@class='context-term']"))
-    )
-
-    out = translation.text
-    driver.quit()
     return out
 
 
-def get_conjugations(verb: str, tenses: list[str], withDef=False) -> dict:
+def get_gerundio(verb: str, driver=None) -> str:
+    """Scrape the gerundio form of the given verb"""
+    if driver is None:
+        driver = setup_driver(verb)
+    
+    try:
+        # Find the Gerundio section
+        gerundio_section = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.XPATH, "//div[@mobile-title='Gerundio Presente']"))
+        )
+
+        print(gerundio_section)
+        
+        # Find the verb form within the Gerundio section
+        gerundio_form = gerundio_section.find_element(By.XPATH, ".//li/i[@class='verbtxt']")
+        print(gerundio_form)
+        print(gerundio_form.text)
+        
+        return gerundio_form.text
+    except Exception as e:
+        print(f"Error getting gerundio form: {e}")
+        return ""
+    finally:
+        if driver is None:
+            driver.quit()
+
+
+def get_conjugations(verb: str, tenses: list[str], withDef=False, withGr=False, driver=None) -> dict:
     """build a dict of conjugations for the minimal tenses"""
-    driver = _setup_driver(verb)
+    if driver is None:
+        driver = setup_driver(verb)
 
     out = {}
     for tense in tenses:
@@ -76,14 +91,18 @@ def get_conjugations(verb: str, tenses: list[str], withDef=False) -> dict:
     if withDef:
        definitions = get_definitions(verb, driver=driver)
 
+    gr = ""
+    if withGr:
+        gr = get_gerundio(verb, driver=driver)
+
     driver.quit()
-    return (out, definitions)
+    return (out, definitions, gr)
 
 
 def handle_gdpr_popup(driver):
     try:
         # Wait for the "Agree and close" button to be clickable
-        agree_button = WebDriverWait(driver, 3).until(
+        agree_button = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.ID, "didomi-notice-agree-button"))
         )
         # Click the button
@@ -93,7 +112,7 @@ def handle_gdpr_popup(driver):
         print(f"Failed to handle GDPR popup: {e}")
 
 
-def _setup_driver(verb: str) -> webdriver.Firefox:
+def setup_driver(verb: str) -> webdriver.Firefox:
     options = Options()
     options.page_load_strategy = 'eager'
     options.headless = True
