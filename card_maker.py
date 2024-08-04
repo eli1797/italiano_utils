@@ -1,4 +1,5 @@
 import click
+import random
 from rich.table import Table
 from rich.console import Console
 
@@ -27,7 +28,13 @@ cardsets = {
         'Indicativo Imperfetto': ['io'],
         'Indicativo Futuro semplice': ['io'],
         'Indicativo Passato prossimo': ['io', 'noi']
-    }
+    },
+    3: {
+        'Indicativo Presente': [random.choice(['io', 'tu', 'lei/lui', 'noi', 'voi', 'loro'])],
+        'Indicativo Imperfetto': [random.choice(['io', 'tu', 'lei/lui', 'noi', 'voi', 'loro'])],
+        'Indicativo Futuro semplice': [random.choice(['io', 'tu', 'lei/lui', 'noi', 'voi', 'loro'])],
+        'Indicativo Passato prossimo': [random.choice(['io', 'noi'])]
+ }
 }
 
 scraped_anki_tenses = {
@@ -100,7 +107,6 @@ def cardset_to_basic_card_format(infinitive: str, conjugations: dict, df: str, c
             }
             cards.append(card)
 
-        
     return cards
 
 
@@ -113,7 +119,7 @@ def print_cardset_data(infinitive: str, vc: dict, df: str, gr: str):
         table.add_column("Cardsets", no_wrap=True)
         for person in persons: 
 
-            in_cardsets = "2"
+            in_cardsets = "2, 3?"
             if person in cardsets[1].get(tense, []):
                 in_cardsets = "1, " + in_cardsets
             if person in cardsets[0].get(tense, []):

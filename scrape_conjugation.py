@@ -43,13 +43,9 @@ def get_gerundio(verb: str, driver=None) -> str:
         gerundio_section = WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.XPATH, "//div[@mobile-title='Gerundio Presente']"))
         )
-
-        print(gerundio_section)
         
         # Find the verb form within the Gerundio section
         gerundio_form = gerundio_section.find_element(By.XPATH, ".//li/i[@class='verbtxt']")
-        print(gerundio_form)
-        print(gerundio_form.text)
         
         return gerundio_form.text
     except Exception as e:
