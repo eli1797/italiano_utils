@@ -22,6 +22,12 @@ def get_definitions(verb: str, driver=None) -> str:
         translation = WebDriverWait(driver, 20).until(
             EC.presence_of_element_located((By.XPATH, "//p[@class='context-term']"))
         )
+
+        # Wait for the text to be non-empty
+        text = WebDriverWait(driver, 20).until(
+            lambda d: translation.text.strip() != ""
+        )
+
         out = translation.text
     except Exception as e:
         print(f"Error getting definitions: {e}")
@@ -98,7 +104,7 @@ def get_conjugations(verb: str, tenses: list[str], withDef=False, withGr=False, 
 def handle_gdpr_popup(driver):
     try:
         # Wait for the "Agree and close" button to be clickable
-        agree_button = WebDriverWait(driver, 10).until(
+        agree_button = WebDriverWait(driver, 2).until(
             EC.element_to_be_clickable((By.ID, "didomi-notice-agree-button"))
         )
         # Click the button
@@ -115,7 +121,7 @@ def setup_driver(verb: str) -> webdriver.Firefox:
     driver = webdriver.Firefox(options=options)
     driver.get(f"https://conjugator.reverso.net/conjugation-italian-verb-{verb}.html")
 
-    handle_gdpr_popup(driver=driver)
+    # handle_gdpr_popup(driver=driver)
     return driver
 
 
