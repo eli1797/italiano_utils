@@ -1,4 +1,5 @@
 import click
+import random
 from rich.table import Table
 from rich.console import Console
 
@@ -27,7 +28,13 @@ cardsets = {
         'Indicativo Imperfetto': ['io'],
         'Indicativo Futuro semplice': ['io'],
         'Indicativo Passato prossimo': ['io', 'noi']
-    }
+    },
+    3: {
+        'Indicativo Presente': [random.choice(['io', 'tu', 'lei/lui', 'noi', 'voi', 'loro'])],
+        'Indicativo Imperfetto': [random.choice(['io', 'tu', 'lei/lui', 'noi', 'voi', 'loro'])],
+        'Indicativo Futuro semplice': [random.choice(['io', 'tu', 'lei/lui', 'noi', 'voi', 'loro'])],
+        'Indicativo Passato prossimo': [random.choice(['io', 'noi'])]
+ }
 }
 
 scraped_anki_tenses = {
@@ -100,11 +107,10 @@ def cardset_to_basic_card_format(infinitive: str, conjugations: dict, df: str, c
             }
             cards.append(card)
 
-        
     return cards
 
 
-def print_cardset_data(vc: dict):
+def print_cardset_data(infinitive: str, vc: dict, df: str, gr: str):
     print()
     for tense, persons in cardsets[2].items():
         table = Table(title=tense)
@@ -113,7 +119,7 @@ def print_cardset_data(vc: dict):
         table.add_column("Cardsets", no_wrap=True)
         for person in persons: 
 
-            in_cardsets = "2"
+            in_cardsets = "2, 3?"
             if person in cardsets[1].get(tense, []):
                 in_cardsets = "1, " + in_cardsets
             if person in cardsets[0].get(tense, []):
@@ -123,16 +129,19 @@ def print_cardset_data(vc: dict):
 
         console = Console()
         console.print(table)
+    
+    print(f"Gerundio: {gr}")
+    print()
+    print(f"{infinitive}: {df}")
     print()
 
 
 def iteractive():
     infinitive = click.prompt("What's the verb infinitivo?", type=str)
     infinitive = infinitive.lower()
-    vc, df = get_conjugations(infinitive, minimal_tenses, withDef=True)
+    vc, df, gr = get_conjugations(infinitive, minimal_tenses, withDef=True, withGr=True)
 
-    print_cardset_data(vc)    
-    print(f"{infinitive}: {df}")
+    print_cardset_data(infinitive, vc, df, gr)    
     print()
 
     cardset_num = click.prompt("Which cardset would you like to use?", type=int)
