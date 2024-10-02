@@ -13,28 +13,27 @@ TODO:
 """
 
 cardsets = {
-    0: {
+    0: {},
+    1: {
         'Indicativo Presente': ['io'],
         'Indicativo Passato prossimo': ['io']
     },
-    1: {
+    2: {
         'Indicativo Presente': ['io', 'tu', 'lei/lui'],
-        'Indicativo Imperfetto': ['io'],
-        'Indicativo Futuro semplice': ['io'],
         'Indicativo Passato prossimo': ['io']
     },
-    2: {
+    3: {
         'Indicativo Presente': ['io', 'tu', 'lei/lui', 'noi', 'voi', 'loro'],
         'Indicativo Imperfetto': ['io'],
         'Indicativo Futuro semplice': ['io'],
         'Indicativo Passato prossimo': ['io', 'noi']
     },
-    3: {
+    4: {
         'Indicativo Presente': [random.choice(['io', 'tu', 'lei/lui', 'noi', 'voi', 'loro'])],
         'Indicativo Imperfetto': [random.choice(['io', 'tu', 'lei/lui', 'noi', 'voi', 'loro'])],
         'Indicativo Futuro semplice': [random.choice(['io', 'tu', 'lei/lui', 'noi', 'voi', 'loro'])],
         'Indicativo Passato prossimo': [random.choice(['io', 'noi'])]
- }
+    },
 }
 
 scraped_anki_tenses = {
@@ -132,7 +131,7 @@ def print_cardset_data(infinitive: str, vc: dict, df: str, gr: str):
     
     print(f"Gerundio: {gr}")
     print()
-    print(f"{infinitive}: {df}")
+    print(f"0) {infinitive}: {df}")
     print()
 
 
