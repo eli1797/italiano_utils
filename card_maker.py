@@ -111,14 +111,18 @@ def cardset_to_basic_card_format(infinitive: str, conjugations: dict, df: str, c
 
 def print_cardset_data(infinitive: str, vc: dict, df: str, gr: str):
     print()
-    for tense, persons in cardsets[2].items():
+    for tense, persons in cardsets[3].items():
         table = Table(title=tense)
         table.add_column("Person", no_wrap=True)
         table.add_column("Conjugation", no_wrap=True)
         table.add_column("Cardsets", no_wrap=True)
         for person in persons: 
 
-            in_cardsets = "2, 3?"
+            in_cardsets = "4?"
+            if person in cardsets[3].get(tense, []):
+                in_cardsets = "3, " + in_cardsets
+            if person in cardsets[2].get(tense, []):
+                in_cardsets = "2, " + in_cardsets
             if person in cardsets[1].get(tense, []):
                 in_cardsets = "1, " + in_cardsets
             if person in cardsets[0].get(tense, []):
