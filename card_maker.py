@@ -69,15 +69,22 @@ def get_for_tense_person(tense: str, person: str, conjugations: dict) -> dict:
     return ", ".join(occurrences)
 
 
-def cardset_to_basic_card_format(infinitive: str, conjugations: dict, df: str, cardset: dict) -> list[dict]:
+def cardset_to_basic_card_format(infinitive: str, conjugations: dict, df: str, cardset: dict, it_first = False) -> list[dict]:
+    fields = {
+                "Front": df, 
+                "Back": infinitive,
+    }
+    if it_first: 
+        fields = {
+            "Front": infinitive,
+            "Back": df,
+        }
+
     cards = [
         {
             "deckName": "Italiano",
             "modelName": "Basic",
-            "fields": {
-                "Front": df, 
-                "Back": infinitive,
-            },
+            "fields": fields,
             "tags": [
                 "italiano_utils",
                 "itutils:v0.0",
@@ -89,14 +96,19 @@ def cardset_to_basic_card_format(infinitive: str, conjugations: dict, df: str, c
 
     for tense, persons in cardset.items():
         for person in persons:
+            fields = {
+                    "Front": f"{tense}: {it_en_people[person]} {df}", 
+                    "Back": get_for_tense_person(tense, person=person, conjugations=conjugations)
+            }
+            if it_first: 
+                fields = {
+                    "Front": get_for_tense_person(tense, person=person, conjugations=conjugations),
+                    "Back": f"{tense}: {it_en_people[person]} {df}",
+                }
             card = {
                 "deckName": "Italiano",
                 "modelName": "Basic",
-                "fields": {
-                    # later can try to get the english conjugation and put it on the front
-                    "Front": f"{tense}: {it_en_people[person]} {df}", 
-                    "Back": get_for_tense_person(tense, person=person, conjugations=conjugations)
-                },
+                "fields": fields,
                 "tags": [
                     "italiano_utils",
                     "itutils:v0.0",
@@ -153,9 +165,13 @@ def iteractive():
     if updated_def:
         df = updated_def
 
-    cardlist = cardset_to_basic_card_format(infinitive, vc, df, cardsets[cardset_num])
+    it_first = True
+    cardlist = cardset_to_basic_card_format(infinitive, vc, df, cardsets[cardset_num], it_first)
 
     tags = set()
+    if it_first:
+        tags.add("it_front")
+
     for card in cardlist:
         tags.update(card["tags"])
 
