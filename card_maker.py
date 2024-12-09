@@ -165,7 +165,7 @@ def iteractive():
     if updated_def:
         df = updated_def
 
-    it_first = True
+    it_first = False
     cardlist = cardset_to_basic_card_format(infinitive, vc, df, cardsets[cardset_num], it_first)
 
     tags = set()
