@@ -10,6 +10,9 @@ from anki_ops import add_notes, list_existing_tags
 """
 TODO:
 - maybe: add the gerund, at least as an option to include it
+- add audio recognition card of the infinitive, maybe others if irregular?
+  - how can recognize if irregular? scrapable or just recognizable probably
+
 """
 
 cardsets = {
