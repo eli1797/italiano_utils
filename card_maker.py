@@ -16,9 +16,12 @@ TODO:
 """
 
 cardsets = {
-    0: {},
+    # infinitive automatically included in each
+    0: {
+        'Indicativo Passato prossimo': ['io']
+    },
     1: {
-        'Indicativo Presente': ['io'],
+        'Indicativo Presente': ['tu'],
         'Indicativo Passato prossimo': ['io']
     },
     2: {
@@ -171,12 +174,14 @@ def iteractive():
     it_first = False
     cardlist = cardset_to_basic_card_format(infinitive, vc, df, cardsets[cardset_num], it_first)
 
-    tags = set()
+    all_cards_tags = set()
     if it_first:
-        tags.add("it_front")
+        all_cards_tags.add("it_front")
 
     for card in cardlist:
-        tags.update(card["tags"])
+        card_tags = set(card["tags"])
+        updated_tags = all_cards_tags.union(card_tags)
+        card["tags"] = list(updated_tags)
 
     existing_tags = list_existing_tags(list(tags))
     if infinitive in existing_tags:
