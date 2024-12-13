@@ -183,7 +183,7 @@ def iteractive():
         updated_tags = all_cards_tags.union(card_tags)
         card["tags"] = list(updated_tags)
 
-    existing_tags = list_existing_tags(list(tags))
+    existing_tags = list_existing_tags([infinitive])
     if infinitive in existing_tags:
         continue_anyway = click.confirm(f"Tag {infinitive} already exist. Continue anyway?")
         if not continue_anyway:
