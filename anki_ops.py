@@ -70,6 +70,20 @@ def can_add_notes(notes: list[dict]) -> bool:
     bools = result.get("result", []) 
     return all(bools)
 
+
+def search_notes(query: str) -> bool:
+    payload = {"action": "findCards", "version": 6, "params": {"query": query}}
+    result = _make_request(payload)
+    result = result.get("result", []) 
+    return result
+
+
+def notes_info(note_ids: list[int]) -> list[dict]:
+    payload = {"action": "notesInfo", "version": 6,"params": {"notes": note_ids}}
+    result = _make_request(payload)
+    result = result.get("result", []) 
+    return result
+
 ## Tags
 
 def does_tag_exist(tag: str) -> bool:
@@ -85,6 +99,12 @@ def list_tags() -> list[str]:
     for name in result.get("result", []):
         out.append(name)
     return out
+
+
+def get_tags_for_note(note_id: int) -> list[str]:
+    payload = {"action": "getNoteTags", "version": 6, "params": {"note": note_id}}
+    result = _make_request(payload)
+    return result.get("result", []) 
 
 
 def list_existing_tags(new_tags: list[str]) -> list[str]:
